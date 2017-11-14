@@ -1,0 +1,14 @@
+import requests
+from bs4 import BeautifulSoup
+from urllib.request import urlretrieve
+url='http://movie.mtime.com/209123/'
+res=requests.get(url)
+print(res)
+soup=BeautifulSoup(res.text,'html.parser')
+imgs=soup.find_all('a',href='http://movie.mtime.com/209123/posters_and_images/')[0]
+img=imgs.find_all('img')[0]['src']
+print(img)
+img_res=requests.get(img)
+imageLocation="C://爬虫/"+"雷神3.jpg"
+urlretrieve(img,imageLocation)
+#爬取并下载图片
