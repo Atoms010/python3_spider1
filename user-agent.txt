@@ -1,0 +1,18 @@
+import requests
+from bs4 import BeautifulSoup
+headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
+ 'Cookie':'safedog-flow-item=D3B5F1BA98A4BF0556F7623A09D5241B; ASP.NET_SessionId=rw22qoxgchpedp35u34ruuha; AJSTAT_ok_pages=4; AJSTAT_ok_times=6'
+}
+n=1
+url='http://www.tuku.cn/bizhi/tuji2715.aspx'
+res=requests.get(url,headers=headers)
+print(res)
+soup=BeautifulSoup(res.text,'html.parser')
+img_urls=soup.find_all('div',class_='disp_img1')
+for img_url in img_urls:
+    img_res=requests.get(img_url.find_all('img')[0]['src'],headers=headers)
+    filepath='{0}.{1}'.format(n,'jpg')
+    with open(filepath,'wb') as f:
+        f.write(img_res.content)
+    n+=1
+#一次批量爬取壁纸网上的图片
