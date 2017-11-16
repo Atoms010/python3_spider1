@@ -1,0 +1,66 @@
+import re
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
+def Url(url):
+    html1=urlopen(url)
+    html2=BeautifulSoup(html1,'lxml')
+    return html2
+def Writing(writing):
+    with open(r'C:\\untitle1\File.txt','a')as f:
+        f.write('\n')
+        f.write(writing)
+def text_create(name,msg):
+    desktop_path="C:\\untitle1\\"
+    full_path=desktop_path+name+'.txt'
+    file=open(full_path,'w')
+    file.write(msg)
+url='http://movie.mtime.com/209123/'
+Html=urlopen(url).read().decode('utf-8')
+title = re.findall(r'<title>(.*?)</title>', Html)
+text_create('File',title[0])
+#爬取并写入电影名
+Html=Url(url)
+TT=Html.findAll("div",{"class":"otherbox __r_c_"})
+for time in TT:
+    writing = time.span.get_text()
+    Writing(writing)
+#爬取并写入电影时间
+for tt in TT:
+    type=tt.children
+    for child in type:
+        child=str(child)
+        res = r'<a .*?>(.*?)</a>'
+        mm = re.findall(res, child, re.S | re.M)
+        for writing in mm:
+            Writing(writing)
+#爬取并写入电影类型和上映时间
+Comment=Html.findAll("div",{"class":"db_shortcomment"})
+for comment in Comment:
+    comment=str(comment)
+    res = r'<h3>(.*?)</h3>'
+    nn = re.findall(res, comment, re.S | re.M)
+    for writing in nn:
+        Writing(writing)
+#爬取并写入电影影评
+url='http://movie.mtime.com/209123/plots.html'
+Html=Url(Html)
+Introduce=url.findAll("div",{"class":"plots_box"})
+for introduce in Introduce:
+    writing = introduce.p.get_text()
+    with open(r'C:\\爬虫\File.txt', 'a')as f:
+        f.write('\n')
+    with open(r'C:\\爬虫\File.txt', 'a',encoding='gb18030')as f:
+        f.write(writing)
+#爬取并写入电影简介
+url='http://movie.mtime.com/comingsoon/#hottest'
+Html=Url(url)
+List=Html.findAll("div",{"id":"tab3ContentID"})
+for list in List:
+    writing=list.p.get_text()
+    Writing(writing)
+Rank=Html.findAll("div",{"class":"picbox","style":"background:#fbad68;"})
+for rank in Rank:
+    writing=rank.i.get_text()
+    Writing(writing)
+#爬取并写入电影榜单排名（电影暂无评分）
+
