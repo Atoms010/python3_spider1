@@ -1,0 +1,13 @@
+import requests
+from bs4 import BeautifulSoup
+from urllib.request import urlretrieve
+url='http://movie.mtime.com/209123/'
+res=requests.get(url)
+print(res)
+soup=BeautifulSoup(res.text,'html.parser')
+imgs=soup.find_all('a',href='http://movie.mtime.com/209123/posters_and_images/')[0]
+img=imgs.find_all('img')[0]['src']
+print(img)
+with open(r'C:\\爬虫\File.txt', 'a')as f:
+    f.write('\n')
+    f.write(img)
